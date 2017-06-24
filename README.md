@@ -1,3 +1,4 @@
+<pre>
 # azure-cli2-demos - D.Evans
 Azure CLI 2 Commands which can be used in either demos or for provisioning Azure resources
 
@@ -26,3 +27,4 @@ az webapp log tail --name pokewww --resource-group pokedemorg
 
 # Deletes App Service Plan and AppService
 az webapp delete --name pokewww --resource-group pokedemorg
+</pre>
