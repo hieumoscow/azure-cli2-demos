@@ -1,4 +1,4 @@
-# Runs Infinite Mario on Web App Service with a Linux Worker on Microsoft Azure
+# Runs a Docker Container (Infinite Mario) on Web App Service with a Linux Worker on Microsoft Azure
 
 # Infinite Mario in HTML5 JavaScript - using Canvas and Audio elements
 # https://hub.docker.com/r/pengbai/docker-supermario/
