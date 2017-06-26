@@ -8,5 +8,6 @@ az appservice plan create --sku S1 --name sng_asp2 --is-linux --location "Southe
 az webapp create --resource-group sm-rg --name smwww --deployment-container-image-name pengbai/docker-supermario:latest --plan sng_asp2 --output jsonc
 # http://smwww.azurewebsites.net/
 
+az webapp stop --name smwww --resource-group sm-rg
 az webapp delete --name smwww --resource-group sm-rg
 az group delete --resource-group sm-rg
