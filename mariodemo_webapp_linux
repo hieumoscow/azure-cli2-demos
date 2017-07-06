@@ -10,4 +10,4 @@ az webapp create --resource-group sm-rg --name smwww --deployment-container-imag
 
 az webapp stop --name smwww --resource-group sm-rg
 az webapp delete --name smwww --resource-group sm-rg
-az group delete --resource-group sm-rg
+az group delete --name sm-rg --no-wait --yes
