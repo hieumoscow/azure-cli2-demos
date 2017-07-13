@@ -4,8 +4,8 @@
 # https://hub.docker.com/r/pengbai/docker-supermario/
 
 az group create --name sm-rg --location "Southeast Asia" --output jsonc
-az appservice plan create --sku S1 --name sng_asp2 --is-linux --location "Southeast Asia" --resource-group "sm-rg" --output jsonc
-az webapp create --resource-group sm-rg --name smwww --deployment-container-image-name pengbai/docker-supermario:latest --plan sng_asp2 --output jsonc
+az appservice plan create --sku S1 --name linux_seasia_plan1 --is-linux --location "Southeast Asia" --resource-group "sm-rg" --output jsonc
+az webapp create --resource-group sm-rg --name smwww --deployment-container-image-name pengbai/docker-supermario:latest --plan linux_seasia_plan 1 --output jsonc
 # http://smwww.azurewebsites.net/
 
 az webapp stop --name smwww --resource-group sm-rg
