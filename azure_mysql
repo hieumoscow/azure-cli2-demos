@@ -42,7 +42,7 @@ az mysql server firewall-rule create --resource-group $MY_RG --server $MYSQL_NAM
 
 az mysql server update -g $MY_RG -n $MYSQL_NAME --ssl-enforcement Disabled
 
-mysql --host mysqlserver4demo.mysql.database.azure.com --user dazadmin@mysqlserver4demo -p
+mysql --host $MYSQL_NAME.mysql.database.azure.com --user $DBADMIN@$MYSQL_NAME -p
 
 az mysql server delete --name $MYSQL_NAME --resource-group $MY_RG
 
