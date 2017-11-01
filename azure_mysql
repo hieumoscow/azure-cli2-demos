@@ -1,4 +1,3 @@
-<pre>
 #!/bin/bash
 
 LOCATION=southeastasia
@@ -48,4 +47,3 @@ mysql --host mysqlserver4demo.mysql.database.azure.com --user dazadmin@mysqlserv
 az mysql server delete --name $MYSQL_NAME --resource-group $MY_RG
 
 az group delete --name $MY_RG --no-wait --yes
-</pre>
