@@ -37,12 +37,17 @@ az mysql server configuration list --resource-group $MY_RG --server $MYSQL_NAME
 
 az mysql server configuration show --name slow_query_log --resource-group $MY_RG --server $MYSQL_NAME
 az mysql server configuration set --name slow_query_log --resource-group $MY_RG --server $MYSQL_NAME --value ON
+az mysql server configuration set --name long_query_time --resource-group myresourcegroup --server myserver4demo --value 10
 
 az mysql server firewall-rule create --resource-group $MY_RG --server $MYSQL_NAME --name AllowAll --start-ip-address 0.0.0.0 --end-ip-address 255.255.255.255
 
 az mysql server update -g $MY_RG -n $MYSQL_NAME --ssl-enforcement Disabled
 
 mysql --host $MYSQL_NAME.mysql.database.azure.com --user $DBADMIN@$MYSQL_NAME -p
+
+# Display and then download MySQL Logs
+az mysql server-logs list --resource-group daz-mysql-rg --server mysqlserver4demo
+az mysql server-logs download --name 20170414-myserver4demo-mysql.log --resource-group daz-mysql-rg --server mysqlserver4demo
 
 az mysql server delete --name $MYSQL_NAME --resource-group $MY_RG
 
