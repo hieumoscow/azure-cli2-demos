@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-LOCATION=southeastasia
+AZLOC=southeastasia
 MY_RG=daz-pgsql-rg
 PGSQL_NAME=pgsqlserver4demo
 DBADMIN=myadmin
@@ -14,14 +14,14 @@ SUBSCRIPTION_ID=1234567890
 # https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-cli
 
 # Create Azure Resource Group
-az group create --name $MY_RG --location $LOCATION --tags AppService=PostgreSQL Environment=Development Owner=bill@microsoft.com
+az group create --name $MY_RG --location $AZLOC --tags AppService=PostgreSQL Environment=Development Owner=bill@microsoft.com
 
 # Create the virtual network "myVNet and subnet"
 az network vnet create \
 -g m$MY_RG \
 -n myVNet \
 --address-prefixes 10.0.0.0/16 \
--l southeastasia
+-l $AZLOC
 
 # Create the service endpoint
 az network vnet subnet create \
@@ -39,7 +39,7 @@ az postgres vnet-rule create \
 --subnet mySubnet
 
 # Create Azure PostgreSQL Database of 128GB
-az postgres server create --resource-group $MY_RG --name $PGSQL_NAME --location southeastasia \
+az postgres server create --resource-group $MY_RG --name $PGSQL_NAME --location $AZLOC \
   --admin-user brijraj --admin-password windows@123456 \
   --performance-tier Standard \
   --compute-units 100 \
