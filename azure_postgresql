@@ -1,3 +1,5 @@
+<<WIP - Updating this for Postgres>>>
+
 #!/bin/bash
 
 LOCATION=southeastasia
@@ -14,6 +16,28 @@ SUBSCRIPTION_ID=1234567890
 # Create Azure Resource Group
 az group create --name $MY_RG --location $LOCATION --tags AppService=PostgreSQL Environment=Development Owner=bill@microsoft.com
 
+# Create the virtual network "myVNet and subnet"
+az network vnet create \
+-g m$MY_RG \
+-n myVNet \
+--address-prefixes 10.0.0.0/16 \
+-l southeastasia
+
+# Create the service endpoint
+az network vnet subnet create \
+-g $MY_RG \
+-n mySubnet \
+--vnet-name myVNet \
+--address-prefix 10.0.0.1/24 \
+--service-endpoints Microsoft.SQL
+
+# Create a VNet rule on the server to secure it to the subnet
+az postgres vnet-rule create \
+--name $PG_SQL_NAME \
+-resource-group $MY_RG \
+--server mypgpserver-20180111 \
+--subnet mySubnet
+
 # Create Azure PostgreSQL Database of 128GB
 az postgres server create --resource-group $MY_RG --name $PGSQL_NAME --location southeastasia \
   --admin-user brijraj --admin-password windows@123456 \
@@ -23,40 +47,34 @@ az postgres server create --resource-group $MY_RG --name $PGSQL_NAME --location 
   --storage-size 128000 \
   --tags Environment=Development Owner=bill@microsoft.com
 
-# Check the value of *innodb_lock_wait_timeout*
+# View Azure Postgres settings, Host information, i.e. ACU
+az postgres server configuration list --resource-group $MY_RG --server $PGSQL_NAME
+
+# Check the value of log_min_messages
 az postgres server configuration show \
    --resource-group $MY_RG \
    --server-name $PGSQL_NAME \
-   --name innodb_lock_wait_timeout
+   --name log_min_messages
 
-# Set value of *innodb_lock_wait_timeout*
+# Set value of log_min_messages
 az postgres server configuration set \
    --resource-group $MY_RG \
    --server-name $PGSQL_NAME \
-   --name innodb_lock_wait_timeout \
-   --value 120
+   --name log_min_messages \
+   --value INFO
 
 # Configure Azure PostgreSQL
-az postgres server configuration show --name slow_query_log --resource-group $MY_RG --server $PGSQL_NAME
-az postgres server configuration set --name slow_query_log --resource-group $MY_RG --server $PGSQL_NAME --value ON
-az postgres server configuration set --name long_query_time --resource-group $MY_RG --server $PGSQL_NAME --value 10
 az postgres server firewall-rule create --resource-group $MY_RG --server $PGSQL_NAME --name AllowAll --start-ip-address 0.0.0.0 --end-ip-address 255.255.255.255
 az postgres server update -g $MY_RG -n $PGSQL_NAME --ssl-enforcement Disabled
 
-# Display Postgresql database config
-az postgres server configuration list --resource-group $MY_RG --server $PGSQL_NAME
+psql -U postgres --host ${PGSQL_NAME}.postgres.database.azure.com
 
-postgres-client --host ${PGSQL_NAME}.postgres.database.azure.com --user ${DBADMIN}@${PGSQL_NAME} -p
-
-CREATE DATABASE STAFF;
-USE staff;
+CREATE DATABASE demodb1 WITH OWNER demorole1 ENCODING 'UTF8';
+USE demodb1;
 CREATE TABLE editorial (id INT, name VARCHAR(20), email VARCHAR(20));
 SHOW tables;
 INSERT INTO editorial (id,name,email) VALUES(01,"Olivia","olivia@company.com");
 SELECT * FROM editorial;
-
-# Show PostgreSQL Host information, i.e. ACU
-az postgres server show --resource-group $MY_RG --name $PGSQL_NAME
 
 # Display CPU Metrics over a set timeframe
 az monitor metrics list --resource "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MY_RG}/providers/Microsoft.DBforMySQL/servers/${PGSQL_NAME}" --time-grain PT1M --start-time 2017-11-08T07:58:00Z --end-time 2017-11-08T13:30:00Z --metric-names compute_consumption_percent | egrep '(timeStamp|average)'
